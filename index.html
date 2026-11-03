@@ -205,7 +205,7 @@
 
   /* ---------- Story ---------- */
   #story{background:var(--ivory)}
-  #story .mandala-slot{width:700px;height:700px;right:-250px;top:-150px;opacity:.2}
+  #story .mandala-slot{width:700px;height:700px;right:-250px;top:-150px;opacity:.2;animation:rot 180s linear infinite}
   .letter{
     max-width:780px;margin:0 auto;padding:70px 50px;background:var(--paper);
     border-radius:6px;box-shadow:var(--shadow);position:relative;
@@ -767,6 +767,17 @@ mbtn.addEventListener('click',()=>{
   if(bgm.paused){bgm.play().then(()=>mbtn.classList.add('playing')).catch(()=>toast('Tap again to play music'))}
   else{bgm.pause();mbtn.classList.remove('playing')}
 });
+
+/* Pause when the person leaves the page; resume only if it was playing */
+let resumeBgm=false;
+function pauseBgm(){
+  if(!bgm.paused){resumeBgm=true;bgm.pause();mbtn.classList.remove('playing')}
+}
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){pauseBgm()}
+  else if(resumeBgm){resumeBgm=false;bgm.play().then(()=>mbtn.classList.add('playing')).catch(()=>{})}
+});
+window.addEventListener('pagehide',pauseBgm);
 
 /* ---- Private click counter (GoatCounter). Paste your site code below, e.g. 'shailendra-anmol' ---- */
 const GOATCOUNTER_CODE='';
